@@ -34,14 +34,7 @@ def setup(config):
                         pad_token=None,
                         unk_token=None)
     
-    batch_size = config['batch_size']
-    k = config['max_examples']
-    if k == 'all': k = len(train_data)
-    train_iter = ch.iterators.SerialIterator(train_data[:k], batch_size, shuffle=True, repeat=True)
-    dev_iter = ch.iterators.SerialIterator(dev_data[:k], batch_size, shuffle=False, repeat=False)
     return {
-        'train_iter': train_iter,
-        'dev_iter': dev_iter,
         'token_embeddings': token_embeddings,
         'token_vocab': token_vocab,
         'class_vocab': class_vocab
