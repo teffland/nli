@@ -67,7 +67,7 @@ class NLILossModel(Chain):
         cs_pred = self.nli_predictor(hs, ps)
         loss = F.softmax_cross_entropy(cs_pred, cs_true)
         reporter.report({'loss':loss}, self)
-        self.accuracy = F.accuracy(cs_pred, cs_true)
+        accuracy = F.accuracy(cs_pred, cs_true)
         reporter.report({'accuracy':accuracy}, self)
         precision, recall, f1, support = F.classification_summary(cs_pred, cs_true)
         reporter.report({'precision': precision,
