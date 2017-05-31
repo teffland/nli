@@ -35,6 +35,8 @@ def setup(config):
                         unk_token=None)
     
     return {
+        'train_data': train_data,
+        'dev_data': dev_data,
         'token_embeddings': token_embeddings,
         'token_vocab': token_vocab,
         'class_vocab': class_vocab
