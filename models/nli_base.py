@@ -1,4 +1,5 @@
 from chainer import Chain, functions as F, links as L
+
 from chainer_bw.monitor import monitor
 
 class NLIPredictor(Chain):
