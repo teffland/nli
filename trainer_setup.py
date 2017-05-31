@@ -1,4 +1,4 @@
-from chainer.optimizers import Adam
+import chainer as ch
 from chainer_bw import RetainGrad
 from chainer_bw import VariableConverterUpdater, VariableConverterEvaluator
 from chainer_bw import ActivationMonitorExtension, BackpropMonitorExtension
@@ -9,7 +9,7 @@ from nli_converter import NLIBatchConverter
 def setup(config, data_setup_results, model_setup_results):
     loss_model = model_setup_results['loss_model']
     
-    optimizer = RetainGrad(Adam)(alpha=config['adam_alpha'])
+    optimizer = RetainGrad(ch.optimizers.Adam)(alpha=config['adam_alpha'])
     optimizer.setup(loss_model)
     
     converter = NLIBatchConverter(data_setup_results['token_vocab'], 
