@@ -3,6 +3,7 @@ from chainer_bw import RetainGrad
 from chainer_bw import VariableConverterUpdater, VariableConverterEvaluator
 from chainer_bw import ActivationMonitorExtension, BackpropMonitorExtension
 from chainer_bw import BetterLogReport
+from nli_converter import NLIBatchConverter
 
 
 def setup(config, data_setup_results, model_setup_results):
