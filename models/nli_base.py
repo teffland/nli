@@ -1,4 +1,4 @@
-from chainer import Chain, functions as F, links as L
+from chainer import Chain, functions as F, links as L, reporter
 
 from chainer_bw.monitor import monitor
 
@@ -66,13 +66,13 @@ class NLILossModel(Chain):
         cs_true = cs
         cs_pred = self.nli_predictor(hs, ps)
         loss = F.softmax_cross_entropy(cs_pred, cs_true)
-        ch.reporter.report({'loss':loss}, self)
+        reporter.report({'loss':loss}, self)
         self.accuracy = F.accuracy(cs_pred, cs_true)
-        ch.reporter.report({'accuracy':accuracy}, self)
+        reporter.report({'accuracy':accuracy}, self)
         precision, recall, f1, support = F.classification_summary(cs_pred, cs_true)
-        ch.reporter.report({'precision': precision,
-                            'recall': recall,
-                            'f1': f1,
-                            'support':support}, 
-                           self)
+        reporter.report({'precision': precision,
+                         'recall': recall,
+                         'f1': f1,
+                         'support':support}, 
+                        self)
         return loss
