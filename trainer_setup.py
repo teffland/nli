@@ -13,9 +13,10 @@ def setup(config, data_setup_results, model_setup_results):
                                   data_setup_extras['class_vocab'])
 
     updater = VariableConverterUpdater(data_setup_results['train_iter'], optimizer, converter=converter)
-    evaluator = VariableConverterEvaluator(data_setup_results['dev_iter'], loss_model, converter=converter)
+    evaluator = VariableConverterEvaluator(data_setup_results['dev_iter'], 
+                                           model_setup_results['loss_model'], converter=converter)
     activation_monitor = ActivationMonitorExtension()
-    backprop_monitor = BackpropMonitorExtension(loss_model)
+    backprop_monitor = BackpropMonitorExtension(model_setup_results['loss_model'])
     logger = BetterLogReport(trigger=(1,'iteration'))
 
     trainer = ch.training.Trainer(updater, (100, 'epoch'), out='result_test')
@@ -28,4 +29,12 @@ def setup(config, data_setup_results, model_setup_results):
     trainer.extend(ch.training.extensions.PrintReport([
         'epoch', 'main/loss', 'main/accuracy', 'validation/main/accuracy'],
         log_report=logger
+    ))
+    trainer.extend(ch.training.extensions.snapshot(
+        filename='snapshots/snapshot_iter_{.updater.iteration}', 
+        trigger=(1, 'epoch')
+    ))
+    trainer.extend(ch.training.extensions.snapshot(
+        filename='snapshots/snapshot_best', 
+        trigger=ch.training.triggers.MaxValueTrigger('validation/main/accuracy', (1,'epoch'))
     ))
