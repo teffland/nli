@@ -6,7 +6,9 @@ from chainer_bw import BetterLogReport
 
 
 def setup(config, data_setup_results, model_setup_results):
-    optimizer = RetainGrad(Adam)()
+    loss_model = model_setup_results['loss_model']
+    
+    optimizer = RetainGrad(Adam)(alpha=config['adam_alpha'])
     optimizer.setup(loss_model)
     
     converter = NLIBatchConverter(data_setup_extras['vocab'], 
@@ -14,9 +16,9 @@ def setup(config, data_setup_results, model_setup_results):
 
     updater = VariableConverterUpdater(data_setup_results['train_iter'], optimizer, converter=converter)
     evaluator = VariableConverterEvaluator(data_setup_results['dev_iter'], 
-                                           model_setup_results['loss_model'], converter=converter)
+                                           loss_model, converter=converter)
     activation_monitor = ActivationMonitorExtension()
-    backprop_monitor = BackpropMonitorExtension(model_setup_results['loss_model'])
+    backprop_monitor = BackpropMonitorExtension(loss_model)
     logger = BetterLogReport(trigger=(1,'iteration'))
 
     trainer = ch.training.Trainer(updater, (100, 'epoch'), out='result_test')
