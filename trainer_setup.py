@@ -5,14 +5,15 @@ from chainer_bw import ActivationMonitorExtension, BackpropMonitorExtension
 from chainer_bw import BetterLogReport
 from nli_converter import NLIBatchConverter
 
-
 def setup(config, data_setup_results, model_setup_results):
     # setup the batch generators
     batch_size = config['batch_size']
     k = config['max_examples']
-    if k == 'all': k = len(train_data)
-    train_iter = ch.iterators.SerialIterator(train_data[:k], batch_size, shuffle=True, repeat=True)
-    dev_iter = ch.iterators.SerialIterator(dev_data[:k], batch_size, shuffle=False, repeat=False)
+    if k == 'all': k = len(data_setup_results['train_data'])
+    train_iter = ch.iterators.SerialIterator(data_setup_results['train_data'][:k], 
+                                             batch_size, shuffle=True, repeat=True)
+    dev_iter = ch.iterators.SerialIterator(data_setup_results['dev_data'][:k], 
+                                           batch_size, shuffle=False, repeat=False)
     loss_model = model_setup_results['loss_model']
     
     # optimize with adam
