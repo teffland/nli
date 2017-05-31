@@ -1,8 +1,13 @@
-from __future__ import print_function
+import logging
+logging.basicConfig(level=logging.INFO, 
+    format='[%(levelname)s] %(asctime)s: %(name)s: %(message)s')
+logger = logging.getLogger(__name__)
+
+import chainer as ch
+from chainer_bw.vocab import Vocab
+from chainer_bw.word_vectors import get_pretrained_vectors
 
 from dataset import load_data
-from vocab import Vocab
-from word_vectors import get_pretrained_vectors
 
 def setup(config):
     """ Take a setup config dictionary and return a train and dev iter. """
@@ -11,7 +16,7 @@ def setup(config):
                                      genres=config['genres'],
                                      drop_confused=config['drop_confused'], 
                                      lowercase=config['lowercase'])
-    print("{} training examples, {} dev examples".format(len(train_data), len(dev_data)))
+    logger.info("{} training examples, {} dev examples".format(len(train_data), len(dev_data)))
     
     token_vocab = Vocab(min_count=1)
     token_vocab.add([ token for datum in train_data for token in datum['h'] ])
@@ -34,9 +39,10 @@ def setup(config):
     if k == 'all': k = len(train_data)
     train_iter = ch.iterators.SerialIterator(train_data[:k], batch_size, shuffle=True, repeat=True)
     dev_iter = ch.iterators.SerialIterator(dev_data[:k], batch_size, shuffle=False, repeat=False)
-    extras = {
-        'token_embeddings': token_embeddings
+    return {
+        'train_iter': train_iter,
+        'dev_iter': dev_iter,
+        'token_embeddings': token_embeddings,
         'token_vocab': token_vocab,
         'class_vocab': class_vocab
     }
-    return train_iter, dev_iter, extras

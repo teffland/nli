@@ -11,8 +11,9 @@ def setup(config, data_setup_results, model_setup_results):
     
     converter = NLIBatchConverter(data_setup_extras['vocab'], 
                                   data_setup_extras['class_vocab'])
-    updater = VariableConverterUpdater(train_iter, optimizer, converter=converter)
-    evaluator = VariableConverterEvaluator(dev_iter, loss_model, converter=converter)
+
+    updater = VariableConverterUpdater(data_setup_results['train_iter'], optimizer, converter=converter)
+    evaluator = VariableConverterEvaluator(data_setup_results['dev_iter'], loss_model, converter=converter)
     activation_monitor = ActivationMonitorExtension()
     backprop_monitor = BackpropMonitorExtension(loss_model)
     logger = BetterLogReport(trigger=(1,'iteration'))
