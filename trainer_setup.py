@@ -12,7 +12,7 @@ def setup(config, data_setup_results, model_setup_results):
     optimizer = RetainGrad(Adam)(alpha=config['adam_alpha'])
     optimizer.setup(loss_model)
     
-    converter = NLIBatchConverter(data_setup_results['vocab'], 
+    converter = NLIBatchConverter(data_setup_results['token_vocab'], 
                                   data_setup_results['class_vocab'])
 
     updater = VariableConverterUpdater(data_setup_results['train_iter'], optimizer, converter=converter)
