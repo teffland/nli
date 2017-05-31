@@ -28,7 +28,7 @@ def setup(config, data_setup_results, model_setup_results):
                                            loss_model, converter=converter)
 
     # setup trainer and extensions
-    trainer = ch.training.Trainer(updater, (config['n_epoch'], 'epoch'), out=config['result_dirname'])
+    trainer = ch.training.Trainer(updater, (config['n_epoch'], 'epoch'), out=config['results_dirname'])
     
     eval_trigger = tuple(config['evaluation_trigger'])
     trainer.extend(evaluator, trigger=eval_trigger)
