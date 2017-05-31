@@ -1,6 +1,6 @@
 from chainer.optimizers import Adam
 from chainer_bw import RetainGrad
-from chainer_bw import VariableConverterUpdater, VariablConverterEvaluator
+from chainer_bw import VariableConverterUpdater, VariableConverterEvaluator
 from chainer_bw import ActivationMonitorExtension, BackpropMonitorExtension
 from chainer_bw import BetterLogReport
 
