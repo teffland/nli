@@ -41,3 +41,5 @@ def setup(config, data_setup_results, model_setup_results):
         filename='snapshots/snapshot_best', 
         trigger=ch.training.triggers.MaxValueTrigger('validation/main/accuracy', (1,'epoch'))
     ))
+    
+    return trainer
