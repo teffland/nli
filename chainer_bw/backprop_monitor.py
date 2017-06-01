@@ -30,6 +30,8 @@ class BackpropMonitorExtension(ch.training.extension.Extension):
         self.mean = mean
         self.std = std
         self._init_param_history(target) # used to monitor param updates
+        self.reported_grad_edges = []
+        self.reported_update_edges = []
         
     def _init_param_history(self, target):
         """ Initialize the param history to the initial param values. """
@@ -55,7 +57,11 @@ class BackpropMonitorExtension(ch.training.extension.Extension):
         if self.hist_edges is not None:
             hist, edges = np.histogram(update, bins=self.hist_edges)
             ch.reporter.report({'{}/update:hist_vals'.format(param_name):hist}, link)
-            ch.reporter.report({'{}/update:hist_edges'.format(param_name):edges}, link)
+            # only report bin edges the first time (cuts log size almost in half)
+            if param_name not in self.reported_update_edges:
+                ch.reporter.report({'{}/update:hist_edges'.format(param_name):edges}, link)           
+                self.reported_update_edges.append(param_name)
+            
         if self.mean:
             ch.reporter.report({'{}/update:mean'.format(param_name):update.mean()}, link)
         if self.std:
@@ -76,7 +82,10 @@ If you are monitoring an itermediate gradient, make sure the optimizer is wrappe
         if self.hist_edges is not None:
             hist, edges = np.histogram(param.grad, bins=self.hist_edges)
             ch.reporter.report({'{}/grad:hist_vals'.format(param_name):hist}, link)
-            ch.reporter.report({'{}/grad:hist_edges'.format(param_name):edges}, link)
+            # only report bin edges the first time (cuts log size almost in half)
+            if param_name not in self.reported_grad_edges:
+                ch.reporter.report({'{}/grad:hist_edges'.format(param_name):edges}, link)           
+                self.reported_grad_edges.append(param_name)
         if self.mean:
             ch.reporter.report({'{}/grad:mean'.format(param_name):param.grad.mean()}, link)
         if self.std:

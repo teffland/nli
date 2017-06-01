@@ -25,6 +25,7 @@ class ActivationMonitorExtension(ch.training.extension.Extension):
         self.hist_edges = np.array(hist_edges)
         self.mean = mean
         self.std = std
+        self.reported_edges = []
         
     def _report_param_on_link(self, param, link, name=None):
         """ Report observations to link object. """
@@ -32,7 +33,10 @@ class ActivationMonitorExtension(ch.training.extension.Extension):
         if self.hist_edges is not None:
             hist, edges = np.histogram(param.data, bins=self.hist_edges)
             ch.reporter.report({'{}/data:hist_vals'.format(param_name):hist}, link)
-            ch.reporter.report({'{}/data:hist_edges'.format(param_name):edges}, link)
+            # only report bin edges the first time (cuts log size almost in half)
+            if param_name not in self.reported_edges:
+                ch.reporter.report({'{}/data:hist_edges'.format(param_name):edges}, link)
+                self.reported_edges.append(param_name)
         if self.mean:
             ch.reporter.report({'{}/data:mean'.format(param_name):param.data.mean()}, link)
         if self.std:

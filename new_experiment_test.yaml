@@ -1,0 +1,28 @@
+
+results_dir_prefix: 'experiments/'
+
+data_setup:
+    setup_file: "data_setup.py"
+    setup_config:
+        data_dir: "data/multinli_0.9/"
+        matched: True
+        genres: [ 'government' ]
+        drop_confused: True
+        lowercase: True
+        pretrained_vectors: "data/word_vectors/glove.6B.300d.txt"
+        normalize_vectors: True
+        
+model_setup:
+    setup_file: "models/model_setup_example.py"
+    setup_config:
+        mlp_sizes: [ 1000, 600, 300, 3 ]
+        
+trainer_setup:
+    setup_file: "trainer_setup.py"
+    setup_config:
+        batch_size: 256
+        max_examples: 'all'
+        adam_alpha: .001
+        n_epoch: 10
+        evaluation_trigger: [ 50, 'iteration']
+        checkpoint_trigger: [ 50, 'iteration']    
