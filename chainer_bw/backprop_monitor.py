@@ -53,7 +53,8 @@ class BackpropMonitorExtension(ch.training.extension.Extension):
 
         """
         param_name = name if name else param.name
-        print('report update')
+        print('report update for {}'.format(canon_name))
+        print('param {}: {}'.format(param_name, param))
         update = param.data - self.param_history[canon_name]
         print('report update - successful')
         if self.hist_edges is not None:
