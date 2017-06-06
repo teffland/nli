@@ -27,15 +27,17 @@ class BetterLogReport(LogReport):
             stats_cpu = {}
             for name, value in six.iteritems(stats):
                 if isinstance(value, np.ndarray):
+                    value[np.isnan(value)] = 0.
                     stats_cpu[name] = value.tolist()
                 else:
+                    if np.isnan(value): value = 0.
                     stats_cpu[name] = float(value)  # copy to CPU
 
             updater = trainer.updater
             stats_cpu['epoch'] = updater.epoch
             stats_cpu['iteration'] = updater.iteration
             # only works with `VariableConverterUpdater`
-            stats_cpu['n_examples'] = getattr(updater, 'n_examples', 0) 
+            stats_cpu['n_examples'] = getattr(updater, 'n_examples', 0)
             stats_cpu['elapsed_time'] = trainer.elapsed_time
 
             if self._postprocess is not None:
