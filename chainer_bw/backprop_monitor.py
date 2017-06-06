@@ -42,7 +42,7 @@ class BackpropMonitorExtension(ch.training.extension.Extension):
                 for param in link.params():
                     if (self.keys is None
                         or (self.keys is not None and param.name in self.keys)):
-                        if param.data:
+                        if param.data is not None:
                             self.param_history['{}/{}'.format(name, param.name)] = param.data
 
     def _report_update_on_link(self, param, link, canon_name, name=None):
