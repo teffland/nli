@@ -34,7 +34,6 @@ def setup(config, data_setup_results, model_setup_results):
     trainer.extend(evaluator, trigger=eval_trigger)
     
     # monitor the forward and backward activations/gradients/updates of the model
-    activation_monitor = ActivationMonitorExtension()
     trainer.extend(ActivationMonitorExtension())
     trainer.extend(BackpropMonitorExtension(loss_model))
     
