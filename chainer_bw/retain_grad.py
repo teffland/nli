@@ -1,7 +1,7 @@
 from chainer import cuda
 def RetainGrad(cls):
     """ Override the update function for a chainer optimizer to retain intermediate gradients.
-    
+
     This is very useful for monitoring gradient flow through a network.
     """
     def update_retain_grad(self, lossfun=None, *args, **kwds):
@@ -21,7 +21,7 @@ def RetainGrad(cls):
 
         """
         if lossfun is not None:
-            use_cleargrads = getattr(self, '_use_cleargrads', False)
+            use_cleargrads = getattr(self, '_use_cleargrads', True)
             loss = lossfun(*args, **kwds)
             if use_cleargrads:
                 self.target.cleargrads()
@@ -33,13 +33,32 @@ def RetainGrad(cls):
         self.reallocate_cleared_grads()
 
         self.call_hooks()
-        self.prepare()
 
         self.t += 1
-        states = self._states
-        for name, param in self.target.namedparams():
-            with cuda.get_device_from_array(param.data):
-                self.update_one(param, states[name])
+        for param in self.target.params():
+            param.update()
+
+        # chainer 1.x version
+        # if lossfun is not None:
+        #     use_cleargrads = getattr(self, '_use_cleargrads', False)
+        #     loss = lossfun(*args, **kwds)
+        #     if use_cleargrads:
+        #         self.target.cleargrads()
+        #     else:
+        #         self.target.zerograds()
+        #     loss.backward(retain_grad=True)
+        #     del loss
+        #
+        # self.reallocate_cleared_grads()
+        #
+        # self.call_hooks()
+        # self.prepare()
+        #
+        # self.t += 1
+        # states = self._states
+        # for name, param in self.target.namedparams():
+        #     with cuda.get_device_from_array(param.data):
+        #         self.update_one(param, states[name])
 
     # dynamically override the class
     return type(cls.__name__, (cls,), {'update':update_retain_grad})
