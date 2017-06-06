@@ -15,6 +15,7 @@ class VariableConverterEvaluator(ch.training.extensions.Evaluator):
     This is useful for sequence-based models, where often we want to pass
     entire lists of :class:`ch.Variable`s as arguments.
     """
+    name = 'validation'
     def evaluate(self):
         """Evaluates the model and returns a result dictionary.
 

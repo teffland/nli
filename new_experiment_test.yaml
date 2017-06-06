@@ -27,6 +27,7 @@ trainer_setup:
         batch_size: 256
         max_examples: 256 # 'all'
         adam_alpha: .001
-        n_epoch: 2
+        n_epoch: 10
+        early_stop_patience: 2
         evaluation_trigger: [ 50, 'iteration']
         checkpoint_trigger: [ 50, 'iteration']

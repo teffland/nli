@@ -1,4 +1,5 @@
 import chainer as ch
+from chainer_bw import PatientMaxValueTrigger
 from chainer_bw import RetainGrad
 from chainer_bw import VariableConverterUpdater, VariableConverterEvaluator
 from chainer_bw import ActivationMonitorExtension, BackpropMonitorExtension
@@ -28,9 +29,13 @@ def setup(config, data_setup_results, model_setup_results):
                                            loss_model, converter=converter)
 
     # setup trainer and extensions
-    trainer = ch.training.Trainer(updater, (config['n_epoch'], 'epoch'), out=config['results_dirname'])
-
     eval_trigger = tuple(config['evaluation_trigger'])
+    early_stop_trigger = PatientMaxValueTrigger(key='validation/main/accuracy',
+                                              patience=config['early_stop_patience'],
+                                              trigger=eval_trigger,
+                                              max_trigger=(config['n_epoch'], 'epoch'))
+    trainer = ch.training.Trainer(updater, early_stop_trigger,
+                                  out=config['results_dirname'])
     trainer.extend(evaluator, trigger=eval_trigger)
 
     # monitor the forward and backward activations/gradients/updates of the model
