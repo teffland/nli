@@ -42,7 +42,8 @@ class BackpropMonitorExtension(ch.training.extension.Extension):
                 for param in link.params():
                     if (self.keys is None
                         or (self.keys is not None and param.name in self.keys)):
-                        self.param_history['{}/{}'.format(name, param.name)] = param.data
+                        if param.data:
+                            self.param_history['{}/{}'.format(name, param.name)] = param.data
 
     def _report_update_on_link(self, param, link, canon_name, name=None):
         """ Report statistics about parameter _updates_ to the link object.
@@ -103,7 +104,7 @@ If you are monitoring an itermediate gradient, make sure the optimizer is wrappe
                 for param in link.params():
                     if (self.keys is None
                         or (self.keys is not None and param.name in self.keys)):
-                        print "reporting {}".format(trainer)
+                        print "reporting params history {}".format()
                         self._report_grad_on_link(param, link)
                         canon_name = '{}/{}'.format(name, param.name)
 
