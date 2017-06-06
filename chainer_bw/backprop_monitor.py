@@ -103,11 +103,12 @@ If you are monitoring an itermediate gradient, make sure the optimizer is wrappe
                 for param in link.params():
                     if (self.keys is None
                         or (self.keys is not None and param.name in self.keys)):
+                        print "reporting {}".format(trainer)
                         self._report_grad_on_link(param, link)
                         canon_name = '{}/{}'.format(name, param.name)
 
                         # only report the update if we have a history
-                        # we will miss the first iteration for unitialized params
+                        # we will miss the first iteration for uninitialized params
                         if canon_name in self.param_history:
                             self._report_update_on_link(param, link, canon_name)
                         self.param_history[canon_name] = param.data
