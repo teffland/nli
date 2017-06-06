@@ -54,10 +54,7 @@ class BackpropMonitorExtension(ch.training.extension.Extension):
 
         """
         param_name = name if name else param.name
-        print('report update for {}'.format(canon_name))
-        print('param {}: {}'.format(param_name, param))
         update = param.data - self.param_history[canon_name]
-        print('report update - successful')
         if self.hist_edges is not None:
             hist, edges = np.histogram(update, bins=self.hist_edges)
             ch.reporter.report({'{}/update:hist_vals'.format(param_name):hist}, link)
@@ -104,7 +101,6 @@ If you are monitoring an itermediate gradient, make sure the optimizer is wrappe
                 for param in link.params():
                     if (self.keys is None
                         or (self.keys is not None and param.name in self.keys)):
-                        print("reporting params history {}".format(self.param_history.keys()))
                         self._report_grad_on_link(param, link)
                         canon_name = '{}/{}'.format(name, param.name)
 

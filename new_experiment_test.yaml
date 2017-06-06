@@ -1,5 +1,6 @@
 email: 'teffland@cs.columbia.edu'
 title: 'A simple test experiment'
+task: 'Multi NLI testing'
 description: 'Uses CBOW for both premise and hypothesis, then combines with an MLP. Meant to overfit'
 random_seed: 0
 results_dir_prefix: 'experiments/'
@@ -26,6 +27,6 @@ trainer_setup:
         batch_size: 256
         max_examples: 256 # 'all'
         adam_alpha: .001
-        n_epoch: 10
+        n_epoch: 2
         evaluation_trigger: [ 50, 'iteration']
         checkpoint_trigger: [ 50, 'iteration']
