@@ -31,7 +31,6 @@ class NLIBatchConverter(object):
               'ps': list of variable arrays of premise sentences
               'cs': variable array of classes
         """
-        with chainer.using_config
         hs = [ ch.Variable(np.array(
                  [ self.token_vocab.idx(token) for token in datum['h'] ],
                dtype=np.int32))
